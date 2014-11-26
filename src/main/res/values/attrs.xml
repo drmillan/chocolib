@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <attr name="fontName" format="string"/>
+    <declare-styleable name="ExLabel">
+        <attr name="fontName"/>
+    </declare-styleable>
+    <declare-styleable name="ExButton">
+        <attr name="fontName"/>
+    </declare-styleable>
+    <declare-styleable name="ExText">
+        <attr name="fontName"/>
+    </declare-styleable>
+</resources>
