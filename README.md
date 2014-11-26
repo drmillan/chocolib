@@ -12,7 +12,16 @@ Extended Button with custom font support
 ### ExLabel
 Extended TextView with custom font support
 
+Widget usage sample:
 ```xml
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
 <com.chocodev.chocolib.widget.ExLabel
         custom:fontName="Pacifico"
         android:layout_width="wrap_content"
@@ -25,4 +34,6 @@ Extended TextView with custom font support
         android:gravity="center"
         android:id="@+id/textView"
         android:layout_gravity="center_horizontal" />
+
+</LinearLayout>
 ```
