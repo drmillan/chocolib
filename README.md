@@ -12,7 +12,12 @@ Extended Button with custom font support
 ### ExLabel
 Extended TextView with custom font support
 
-Widget usage sample:
+Truetype font must be placed under assets/fonts
+
+Widget usage sample with font: Pacifico:
+
+assets/fonts/Pacifico.ttf
+
 ```xml
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -36,4 +41,7 @@ Widget usage sample:
         android:layout_gravity="center_horizontal" />
 
 </LinearLayout>
+
+![Alt text](/doc/exlabel.png)
+
 ```
