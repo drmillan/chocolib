@@ -18,9 +18,9 @@ Extended TextView with custom font support
 ## UI sample
 
 Widget usage sample with font: Pacifico:
-### assets/fonts/Pacifico.ttf
-### assets/fonts/CaviarDreams.ttf
-### assets/fonts/AlexBrush-Regular.ttf
+* assets/fonts/Pacifico.ttf
+* assets/fonts/CaviarDreams.ttf
+* assets/fonts/AlexBrush-Regular.ttf
 
 ```xml
 
