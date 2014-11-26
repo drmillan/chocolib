@@ -42,6 +42,6 @@ assets/fonts/Pacifico.ttf
 
 </LinearLayout>
 
-![Alt text](/doc/exlabel.png)
-
 ```
+
+![Alt text](/doc/exlabel.png)
