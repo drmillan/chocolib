@@ -5,6 +5,8 @@ Android UI components
 
 ## UI Components
 
+Truetype font must be placed under assets/fonts
+
 ### ExText
 Extended EditText with custom font support
 ### ExButton
@@ -12,35 +14,45 @@ Extended Button with custom font support
 ### ExLabel
 Extended TextView with custom font support
 
-Truetype font must be placed under assets/fonts
 
 Widget usage sample with font: Pacifico:
-
 assets/fonts/Pacifico.ttf
 
 ```xml
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center">
-
-<com.chocodev.chocolib.widget.ExLabel
-        custom:fontName="Pacifico"
-        android:layout_width="wrap_content"
+    >
+    <com.chocodev.chocolib.widget.ExLabel
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Circle"
+        app:fontName="Pacifico"
         android:textSize="30sp"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"
         android:gravity="center"
-        android:id="@+id/textView"
-        android:layout_gravity="center_horizontal" />
-
+        android:layout_margin="10dp"
+        android:text="ExLabel"/>
+    <com.chocodev.chocolib.widget.ExButton
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        app:fontName="AlexBrush-Regular"
+        android:textSize="40sp"
+        android:gravity="center"
+        android:layout_margin="10dp"
+        android:text="ExButton"/>
+    <com.chocodev.chocolib.widget.ExText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        app:fontName="CaviarDreams"
+        android:textSize="30sp"
+        android:gravity="center"
+        android:layout_margin="10dp"
+        android:text="ExText"/>
 </LinearLayout>
+
 
 ```
 
