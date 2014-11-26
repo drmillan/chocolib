@@ -44,4 +44,4 @@ assets/fonts/Pacifico.ttf
 
 ```
 
-![Alt text](/doc/exlabel.png)
+![Alt text](/doc/widget_demo.png)
