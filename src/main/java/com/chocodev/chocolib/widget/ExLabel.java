@@ -2,7 +2,6 @@ package com.chocodev.chocolib.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Canvas;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.TextView;
@@ -27,10 +26,6 @@ public class ExLabel extends TextView {
     public ExLabel(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initFromAttributes(context,attrs);
-    }
-
-    protected void onDraw (Canvas canvas) {
-        super.onDraw(canvas);
     }
 
     private void initFromAttributes(Context context,AttributeSet attrs) {
