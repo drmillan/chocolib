@@ -29,7 +29,7 @@ public class FontFactory {
         {
             AssetManager manager=context.getAssets();
 
-            String fontNameWithExtension = new String();
+            String fontNameWithExtension = "";
             try {
                 String fileList[] = manager.list("fonts");
                 if(fileList!=null) {
