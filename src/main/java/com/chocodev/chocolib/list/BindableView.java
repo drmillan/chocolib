@@ -32,4 +32,5 @@ public abstract class BindableView<T> extends RelativeLayout {
     public ListEventListener<T> getListEventListener() {
         return this.listEventListener;
     }
+
 }
