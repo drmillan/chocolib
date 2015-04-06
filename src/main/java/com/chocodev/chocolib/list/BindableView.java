@@ -22,12 +22,6 @@ public abstract class BindableView<T> extends RelativeLayout {
         super(context, attrs, defStyle);
     }
 
-
-    public void bind(T object)
-    {
-
-    }
-
     public void bind(T object,int total, int position)
     {
 
