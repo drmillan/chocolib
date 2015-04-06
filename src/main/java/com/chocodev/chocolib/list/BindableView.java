@@ -23,7 +23,15 @@ public abstract class BindableView<T> extends RelativeLayout {
     }
 
 
-    public abstract void bind(T object);
+    public void bind(T object)
+    {
+
+    }
+
+    public void bind(T object,int total, int position)
+    {
+
+    }
 
     public void setListEventListener(ListEventListener<T> listEventListener) {
         this.listEventListener = listEventListener;
