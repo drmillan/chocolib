@@ -1,4 +1,17 @@
 apply plugin: 'android-library'
+apply plugin: 'maven'
+
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.0.+'
+        classpath 'com.github.dcendents:android-maven-plugin:1.0'
+    }
+}
+
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
@@ -7,7 +20,7 @@ android {
         minSdkVersion 10
         targetSdkVersion 21
         versionCode 1
-        versionName "1.0"
+        versionName '1.0.0'
     }
     buildTypes {
         release {
@@ -19,4 +32,29 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+task installArchives(type: Upload) {
+    description "Installs the artifacts to the local Maven repository."
+    configuration = configurations['archives']
+    repositories {
+        mavenDeployer {
+            repository url: "file://${System.properties['user.home']}/.m2/repository"
+            pom.groupId = 'com.chocodev'
+            pom.artifactId = 'chocolib'
+            pom.version = android.defaultConfig.versionName
+        }
+    }
+}
+task installArchivesToRemote(type: Upload) {
+    description "Installs the artifacts to the remote Maven repository."
+    configuration = configurations['archives']
+    repositories {
+        mavenDeployer {
+            repository url: "http://repositorio.viavansi.com/libs-releases-local"
+            pom.groupId = 'com.chocodev'
+            pom.artifactId = 'chocolib'
+            pom.version = android.defaultConfig.versionName
+        }
+    }
 }
