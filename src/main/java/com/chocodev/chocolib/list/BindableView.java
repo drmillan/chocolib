@@ -2,6 +2,7 @@ package com.chocodev.chocolib.list;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 /**
@@ -33,6 +34,20 @@ public abstract class BindableView<T> extends RelativeLayout {
 
     public ListEventListener<T> getListEventListener() {
         return this.listEventListener;
+    }
+    public void send(int actionId,T item)
+    {
+        if(getListEventListener()!=null)
+        {
+            getListEventListener().onListEvent(actionId,item,this);
+        }
+    }
+    public void send(int actionId,T item,View view)
+    {
+        if(getListEventListener()!=null)
+        {
+            getListEventListener().onListEvent(actionId,item,view);
+        }
     }
 
 }
