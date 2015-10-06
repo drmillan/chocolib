@@ -5,11 +5,12 @@ import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 /**
  * Created by drm on 26/04/15.
  */
-public class SquareView extends LinearLayout {
+public class SquareView extends RelativeLayout {
     public SquareView(Context context) {
         super(context);
     }
