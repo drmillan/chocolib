@@ -7,8 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.chocodev.chocolib.R;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -41,18 +39,16 @@ public class CBaseRecyclerViewAdapter<T, Q extends BindableView<T>> extends Recy
     }
 
     private Class viewClass;
-    private Class objectClass;
     private List<T> items;
     private ListEventListener listEventListener;
     private Method builderMethod = null;
 
-    public CBaseRecyclerViewAdapter(Class<T> objectClass, Class<Q> viewClass, List<T> items,int emptyViewId) {
-        this(objectClass,viewClass,items);
+    public CBaseRecyclerViewAdapter(Class<Q> viewClass, List<T> items,int emptyViewId) {
+        this(viewClass,items);
         this.emptyViewId=emptyViewId;
     }
 
-    public CBaseRecyclerViewAdapter(Class<T> objectClass, Class<Q> viewClass, List<T> items) {
-        this.objectClass = objectClass;
+    public CBaseRecyclerViewAdapter(Class<Q> viewClass, List<T> items) {
         this.viewClass = viewClass;
         this.items = items;
         try {
@@ -136,9 +132,9 @@ public class CBaseRecyclerViewAdapter<T, Q extends BindableView<T>> extends Recy
         this.listEventListener = listEventListener;
     }
 
-    public void notifyAction(int actionId, T object, View view) {
+    public void notifyAction(int actionId, int position, BindableView<?> view) {
         if (listEventListener != null) {
-            listEventListener.onListEvent(actionId, object, view);
+            listEventListener.onListEvent(actionId, position, view);
         }
     }
 }

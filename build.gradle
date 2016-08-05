@@ -1,10 +1,12 @@
 apply plugin: 'android-library'
 apply plugin: 'maven'
 apply plugin: 'signing'
+apply plugin: 'maven-publish'
 
 group = "com.chocodev"
 archivesBaseName = "chocolib"
-version = "1.0.0"
+version = "1.0.2"
+description = "Android widget library"
 
 
 
@@ -41,12 +43,9 @@ repositories{
 }
 
 dependencies {
-<<<<<<< HEAD
     compile group: 'commons-io', name: 'commons-io', version: '2.0.1'
-=======
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:recyclerview-v7:22.2.0'
->>>>>>> 72a6f2fb44f6382933fff5e5bd8bdd0a8c18253a
 }
 
 task installArchives(type: Upload) {
@@ -92,6 +91,7 @@ task sourcesJar(type: Jar) {
 }
 */
 
+
 artifacts {
     archives /*javadocJar, */sourcesJar
 }
@@ -114,21 +114,23 @@ uploadArchives {
             }
 
             pom.project {
-                name 'Example Application'
-                packaging 'jar'
+                name 'chocolib'
+                packaging 'aar'
                 // optionally artifactId can be defined here description 'A application used as an example on how to set up pushing  its components to the Central Repository.'
-                url 'http://www.example.com/example-application'
+                url 'https://github.com/drmillan/chocolib'
+                description "Android widget library"
 
                 scm {
-                    connection 'scm:svn:http://foo.googlecode.com/svn/trunk/'
-                    developerConnection 'scm:svn:https://foo.googlecode.com/svn/trunk/'
-                    url 'http://foo.googlecode.com/svn/trunk/'
+                    connection 'scm:git@github.com:drmillan/chocolib.git'
+                    developerConnection 'scm:git@github.com:drmillan/chocolib.git'
+                    url 'scm:git@github.com:drmillan/chocolib.git'
                 }
 
                 licenses {
                     license {
-                        name 'The Apache License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        name 'MIT license'
+                        url 'http://www.opensource.org/licenses/mit-license.php'
+                        distribution 'repo'
                     }
                 }
 

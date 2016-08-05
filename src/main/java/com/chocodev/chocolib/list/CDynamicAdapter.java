@@ -6,70 +6,38 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.chocodev.chocolib.list.provider.AdapterViewProvider;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by DRM on 19/09/13.
  */
-public class CBaseAdapter<T, Q extends BindableView<T>> extends BaseAdapter {
+public class CDynamicAdapter extends BaseAdapter {
 
-    public static final String TAG = CBaseAdapter.class.getName();
+    public static final String TAG = CDynamicAdapter.class.getName();
 
-    private Class viewClass;
-    private List<T> items;
+    private AdapterViewProvider viewProvider;
     private ListEventListener listEventListener;
-    private Method builderMethod = null;
+    private Map<Class,Method> builderMethods = new HashMap<>();
 
-    public CBaseAdapter(Class<Q> viewClass, List<T> items) {
-        this.viewClass = viewClass;
-        this.items = items;
-        try {
-            builderMethod = viewClass.getMethod("build", Context.class);
-        } catch (Exception ex) {
-
-        }
+    public CDynamicAdapter(AdapterViewProvider viewProvider) {
+        this.viewProvider=viewProvider;
     }
 
-    /**
-     * Change the list objects to items
-     *
-     * @param items
-     */
-    public void setItems(List<T> items) {
-        this.items = items;
-        notifyDataSetChanged();
-
-    }
-
-    /**
-     * Clear all items from the list
-     */
-    public void clearItems() {
-        this.items.clear();
-        notifyDataSetChanged();
-    }
-
-    /**
-     * Add new items to the existing ones
-     *
-     * @param items
-     */
-    public void addItems(List<T> items) {
-        this.items.addAll(items);
-        notifyDataSetChanged();
-    }
 
     @Override
     public int getCount() {
-        return items == null ? 0 : items.size();
+        return viewProvider.getItemCount();
     }
 
     @Override
     public Object getItem(int position) {
-        return items == null ? null : items.get(position);
+        return viewProvider.getObjectAtPosition(position);
     }
 
     @Override
@@ -79,14 +47,27 @@ public class CBaseAdapter<T, Q extends BindableView<T>> extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        BindableView<T> viewGroup = (BindableView<T>) convertView;
+        BindableView viewGroup = (BindableView) convertView;
+        Class<BindableView<?>> viewClass=viewProvider.getViewClassForPosition(position);
         if (viewGroup == null) {
 
+            Method builderMethod=builderMethods.get(viewClass);
+            if(builderMethod==null)
+            {
+                try
+                {
+                    builderMethod=viewClass.getMethod("build", Context.class);
+                }
+                catch(Exception ex)
+                {
+                    // NO build method, no android annotations
+                }
+            }
             if (builderMethod == null) {
                 // has no build
                 try {
                     Constructor constructor = viewClass.getConstructor(Context.class);
-                    viewGroup = (BindableView<T>) constructor.newInstance(parent.getContext());
+                    viewGroup = (BindableView<?>) constructor.newInstance(parent.getContext());
                 } catch (InstantiationException e) {
                     Log.e(TAG, e.getMessage(), e);
                 } catch (IllegalAccessException e) {
@@ -98,17 +79,18 @@ public class CBaseAdapter<T, Q extends BindableView<T>> extends BaseAdapter {
                 }
             } else {
                 try {
-                    viewGroup = (BindableView<T>) builderMethod.invoke(null, new Object[]{parent.getContext()});
+                    viewGroup = (BindableView<?>) builderMethod.invoke(null, new Object[]{parent.getContext()});
                 } catch (Exception ex) {
                     Log.e(TAG, ex.getMessage(), ex);
                     return null;
                 }
             }
+            builderMethods.put(viewClass,builderMethod);
         }
         if (listEventListener != null) {
             viewGroup.setListEventListener(listEventListener);
         }
-        viewGroup.bind((T) getItem(position),items.size(),position);
+        viewGroup.bind(getItem(position),viewProvider.getItemCount(),position);
         return viewGroup;
     }
 
