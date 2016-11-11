@@ -5,14 +5,14 @@ apply plugin: 'maven-publish'
 
 group = "com.chocodev"
 archivesBaseName = "chocolib"
-version = "1.0.2"
+version = "1.0.3"
 description = "Android widget library"
 
 
 
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.2'
