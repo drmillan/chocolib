@@ -108,7 +108,7 @@ public class CBaseAdapter<T, Q extends BindableView<T>> extends BaseAdapter {
         if (listEventListener != null) {
             viewGroup.setListEventListener(listEventListener);
         }
-        viewGroup.bind((T) getItem(position),items.size(),position);
+        viewGroup.baseBind((T) getItem(position),items.size(),position);
         return viewGroup;
     }
 

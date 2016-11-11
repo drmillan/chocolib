@@ -6,8 +6,8 @@ import com.chocodev.chocolib.list.BindableView;
  * Created by drm on 05/08/16.
  */
 
-public interface AdapterViewProvider {
+public interface AdapterViewProvider<T> {
     int getItemCount();
-    Object getObjectAtPosition(int position);
-    Class<BindableView<?>> getViewClassForPosition(int position);
+    T getObjectAtPosition(int position);
+    Class<? extends BindableView<T>> getViewClassForPosition(int position);
 }

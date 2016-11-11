@@ -12,6 +12,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,6 +26,25 @@ public class CDynamicAdapter extends BaseAdapter {
     private ListEventListener listEventListener;
     private Map<Class,Method> builderMethods = new HashMap<>();
 
+    public <T> CDynamicAdapter(final Class<BindableView<T>> viewClass,final List<T> objects)
+    {
+        viewProvider=new AdapterViewProvider<T>() {
+            @Override
+            public int getItemCount() {
+                return objects.size();
+            }
+
+            @Override
+            public T getObjectAtPosition(int position) {
+                return objects.get(position);
+            }
+
+            @Override
+            public Class<? extends BindableView<T>> getViewClassForPosition(int position) {
+                return viewClass;
+            }
+        };
+    }
     public CDynamicAdapter(AdapterViewProvider viewProvider) {
         this.viewProvider=viewProvider;
     }
@@ -48,7 +68,7 @@ public class CDynamicAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         BindableView viewGroup = (BindableView) convertView;
-        Class<BindableView<?>> viewClass=viewProvider.getViewClassForPosition(position);
+        Class<? extends BindableView> viewClass=viewProvider.getViewClassForPosition(position);
         if (viewGroup == null) {
 
             Method builderMethod=builderMethods.get(viewClass);
@@ -57,6 +77,7 @@ public class CDynamicAdapter extends BaseAdapter {
                 try
                 {
                     builderMethod=viewClass.getMethod("build", Context.class);
+                    builderMethods.put(viewClass,builderMethod);
                 }
                 catch(Exception ex)
                 {
@@ -85,12 +106,11 @@ public class CDynamicAdapter extends BaseAdapter {
                     return null;
                 }
             }
-            builderMethods.put(viewClass,builderMethod);
         }
         if (listEventListener != null) {
             viewGroup.setListEventListener(listEventListener);
         }
-        viewGroup.bind(getItem(position),viewProvider.getItemCount(),position);
+        viewGroup.baseBind(getItem(position),viewProvider.getItemCount(),position);
         return viewGroup;
     }
 
