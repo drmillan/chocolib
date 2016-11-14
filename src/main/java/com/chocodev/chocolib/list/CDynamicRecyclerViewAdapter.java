@@ -7,25 +7,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.chocodev.chocolib.list.provider.AdapterViewProvider;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by DRM on 19/09/13.
  */
-public class CBaseRecyclerViewAdapter<T, Q extends BindableView<T>> extends RecyclerView.Adapter {
+public class CDynamicRecyclerViewAdapter<T, Q extends BindableView<T>> extends RecyclerView.Adapter {
 
-    public static final String TAG = CBaseRecyclerViewAdapter.class.getName();
+    public static final String TAG = CDynamicRecyclerViewAdapter.class.getName();
     private static final int EMPTY_VIEW = 10001;
     private int emptyViewId=-1;
+    private Map<Integer,Class<BindableView>> viewClassesByType=new HashMap<>();
 
     public class EmptyViewHolder extends RecyclerView.ViewHolder {
         public EmptyViewHolder(View itemView) {
             super(itemView);
         }
     }
+
     public static class ViewHolder<Q extends BindableView> extends RecyclerView.ViewHolder {
         Q v;
         public ViewHolder(Q v) {
@@ -38,35 +44,50 @@ public class CBaseRecyclerViewAdapter<T, Q extends BindableView<T>> extends Recy
         }
     }
 
-    private Class viewClass;
-    private List<T> items;
+    private AdapterViewProvider viewProvider;
     private ListEventListener listEventListener;
-    private Method builderMethod = null;
+    private Map<Class,Method> builderMethods = new HashMap<>();
 
-    public CBaseRecyclerViewAdapter(Class<Q> viewClass, List<T> items,int emptyViewId) {
-        this(viewClass,items);
+    public CDynamicRecyclerViewAdapter(AdapterViewProvider viewProvider,int emptyViewId) {
+        this.emptyViewId=emptyViewId;
+        this.viewProvider=viewProvider;
+    }
+
+    public <T> CDynamicRecyclerViewAdapter(final Class<BindableView<T>> viewClass,final List<T> objects, int emptyViewId)
+    {
+        this(viewClass,objects);
         this.emptyViewId=emptyViewId;
     }
+    public <T> CDynamicRecyclerViewAdapter(final Class<BindableView<T>> viewClass,final List<T> objects)
+    {
+        viewProvider=new AdapterViewProvider<T>() {
+            @Override
+            public int getItemCount() {
+                return objects.size();
+            }
 
-    public CBaseRecyclerViewAdapter(Class<Q> viewClass, List<T> items) {
-        this.viewClass = viewClass;
-        this.items = items;
-        try {
-            builderMethod = viewClass.getMethod("build", Context.class);
-        } catch (Exception ex) {
+            @Override
+            public T getObjectAtPosition(int position) {
+                return objects.get(position);
+            }
 
-        }
+            @Override
+            public Class<? extends BindableView<T>> getViewClassForPosition(int position) {
+                return viewClass;
+            }
+        };
     }
-
 
     @Override
     public int getItemViewType(int position) {
         if(emptyViewId!=-1) {
-            if (items.size() == 0) {
+            if (viewProvider.getItemCount() == 0) {
                 return EMPTY_VIEW;
             }
         }
-        return super.getItemViewType(position);
+        Class viewClass=viewProvider.getViewClassForPosition(position);
+        viewClassesByType.put(viewClass.hashCode(),viewClass);
+        return viewClass.hashCode();
     }
 
 
@@ -78,7 +99,7 @@ public class CBaseRecyclerViewAdapter<T, Q extends BindableView<T>> extends Recy
             return evh;
         }
 
-        ViewHolder vh = new ViewHolder<>(getView(parent));
+        ViewHolder vh = new ViewHolder<>(getView(parent,viewClassesByType.get(viewType)));
         return vh;
     }
 
@@ -86,20 +107,31 @@ public class CBaseRecyclerViewAdapter<T, Q extends BindableView<T>> extends Recy
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
         if(holder instanceof ViewHolder) {
-            ((ViewHolder<Q>) holder).bind(items.get(position), items.size(), position);
+            ((ViewHolder<Q>) holder).bind(viewProvider.getObjectAtPosition(position), viewProvider.getItemCount(), position);
         }
     }
 
     @Override
     public int getItemCount() {
-        if(emptyViewId!=-1) {
-            return items.size() > 0 ? items.size() : 1;
-        }
-        return items.size();
+        return viewProvider.getItemCount();
     }
 
-    public BindableView<T> getView(ViewGroup parent) {
+    public BindableView<T> getView(ViewGroup parent,Class<BindableView> viewClass) {
         BindableView<T> viewGroup=null;
+        Method builderMethod=builderMethods.get(viewClass);
+        if(builderMethod==null)
+        {
+            try
+            {
+                builderMethod=viewClass.getMethod("build", Context.class);
+                builderMethods.put(viewClass,builderMethod);
+            }
+            catch(Exception ex)
+            {
+                // NO build method, no android annotations
+            }
+        }
+
             if (builderMethod == null) {
                 // has no build
                 try {
